@@ -1,0 +1,169 @@
+---
+title: 'Homework #2'
+author: "Ahabyona James"
+output:
+html_document: default
+---
+
+Group members: Adil Ryskulov, Zhanna Sarsenova, Ahabyona James, Mst Parvin.
+
+#Note *we used random generator and thus results may vary, each time the code is run *
+
+----------------------------------------------------------------------------------------------------
+## Possible Protocol 1 (PP1): roll once; if get 6 then conclude the dice is not fair; if roll any other number then conclude it is fair. Analyze PP1: if the dice were fair, what is the probability it would be judged to be unfair? Oppositely, if the dice were unfair, what is the probability that it would be judged to be fair?
+----------------------------------------------------------------------------------------------------
+
+# Roll once; if get 6 then conclude the dice is not fair; if roll any other number then conclude it is fair.
+
+```{r}
+rolls_dice1<-sample(1:6,1,rep=T)
+rolls_dice1
+```
+
+The roled dice reveal [5], which means dice can be conclude as fair. 
+
+# Analyze PP1: if the dice were fair, what is the probability it would be judged to be unfair? Oppositely, if the dice were unfair, what is the probability that it would be judged to be fair?
+
+- If the dice is fair, the probability it would be judged to be unfair is E(1,2,3,4,5)=5/6=0.8333.
+- If the dice is unfair, the probability it would be judged to be fair is E(6)=1/6=0.1667.
+
+```{r}
+E_fair<-5/6
+E_unfair<-1/6
+table_1<-matrix(c(E_fair,E_unfair), ncol = 1)
+colnames(table_1)<-c("Probability that dice would be judged to be")
+row.names(table_1)<-c("Fair","Unfair")
+table_1
+```
+
+
+
+----------------------------------------------------------------------------------------------------
+## Possible Protocol  (PP2): roll the dice 30 times. Group can specify a decision rule to judge that dice is fair or unfair. Consider the stats question: if fair dice are rolled 30 times, what is likely number of 6 resulting? How unusual is it, to get 1 more or less than that? How unusual is it, to get 2 more or less? 3? At least one member of the group should be able to do this with theory; at least one member of the group should be able to write a little program in R to simulate this. Analyze PP2 including the question: if the dice were fair, what is the chance it could be judged as unfair?
+----------------------------------------------------------------------------------------------------
+
+# Roll the dice 30 times. Group can specify a decision rule to judge that dice is fair or unfair.
+
+```{r}
+roll_dice30<-sample(1:6,30,rep=T)
+roll_dice30
+```
+
+roll_dice30 summarizes results of dice being rolled 30 times.
+In order to decide whether dice is fair or not we considered the probability of outcome [6] which is equal to 0.1667. Thus, if dice is fair the roll_dice30 has to have 16.67% of outcome [6], or [6] should appear 5 times. In case if [6] revealed more or less than 5 times, the dice will be considered not fair.
+```{r}
+table(roll_dice30)
+```
+In roll_dice30, outcome [6] was revealed by dice 4 times. This is not equal to 5, thus, the observation of outcome [6] does not match with probability of 0.1667. 
+Which means that this dice is unfair.
+
+# Consider the stats question: if fair dice are rolled 30 times, what is likely number of [6] resulting? How unusual is it, to get 1 more or less than that? How unusual is it, to get 2 more or less? 3?
+
+```{r}
+table_2<-matrix(c(dbinom(5, size=30, prob=1/6) ,pbinom(6,size=30,prob=1/6)-pbinom(3,size=30,prob=1/6),pbinom(7,size=30,prob=1/6)-pbinom(2,size=30,prob=1/6),pbinom(8,size=30,prob=1/6)-dbinom(1, size=30, prob=1/6)), ncol = 1)
+colnames(table_2)<-c("The probability of getting [6]")
+row.names(table_2)<-c("exactly 5 times","1 more or less that 5 times","2 more or less that 5 times","3 more or less that 5 times")
+table_2
+```
+
+* If fair dice are rolled 30 times, what is the likely number of 6 resulting?
+
+Considering the dice is fair and has equal probability ro reveal each face, we conclude that if a fair dice rolled 30 times 5 out 30 rolls of a dice will reveal 6.
+```{r}
+number_six_resulting<-30*1/6
+number_six_resulting
+```
+
+* How unusual is it to get 5 times, to get 1 more or less than 5 times? How unusual is it, to get 2 more or less? 3?
+
+This question should be solved by utilizing a Binominal Distribution 
+
+The probability of getting [6] exactly 5 times from 30 rolls is 0.1921.
+```{r}
+dbinom(5, size=30, prob=1/6) 
+```
+
+The probability of getting [6] 1 more or less that 5 times from 30 rolls is 0.5369.
+```{r}
+pbinom(6,size=30,prob=1/6)-pbinom(3,size=30,prob=1/6)
+```
+
+The probability of getting [6] 2 more or less that 5 times from 30 rolls is 0.0.7835.
+```{r}
+pbinom(7,size=30,prob=1/6)-pbinom(2,size=30,prob=1/6)
+```
+
+The probability of getting [6] 3 more or less that 5 times from 30 rolls is 0.9242.
+```{r}
+pbinom(8,size=30,prob=1/6)-dbinom(1, size=30, prob=1/6)
+```
+
+
+
+----------------------------------------------------------------------------------------------------
+## Possible Protocol  (PP2): roll 100 times and specify decision rules. Some cases are easy: if every roll comes to 6 then might quickly conclude. But what about the edge cases? Is it fair to say that every conclusion has some level of confidence attached? Where do you set boundaries for decisions? Analyze PP3.
+----------------------------------------------------------------------------------------------------
+
+# Roll 100 times and specify decision rules.
+
+```{r}
+roll_dice100<-sample(1:6,100,rep=T)
+roll_dice100
+```
+
+roll_dice100 summarizes results of dice being rolled 100 times.
+In order to decide whether dice is fair or not, we considered the probability of outcome [6] which is equal to 0.1667. Thus, if dice is fair the roll_dice30 has to have 16.67% of outcome [6], or [6] should appear either 16 or 17 times. In case if [6] revealed more or less than 16 or more than 17 times, the dice will be considered not fair.
+```{r}
+table(roll_dice100)
+```
+In roll_dice30, outcome [6] was revealed by dice 13 times. This is not equal to 15, thus, the observation of outcome [6] does not match with probability of 0.1667. 
+Which means that this dice is unfair.
+
+# Some cases are easy: if every roll comes to 6 then might quickly conclude. But what about the edge cases?
+
+Concluding dice fairness based on the values it reveals might cause edge cases where it will reveal [6] more often than expected. This issue could be minimized in case of using a large sample i.e. 10,000 rolls and compare it to expected variables with 95% confidence level. In large sample observation results will be maximally close to expected results.
+
+
+
+----------------------------------------------------------------------------------------------------
+## Experiment Protocol  (EP1): Now devise your own experiment protocol (not ‘possible’ anymore but actual so call it EP1). Analyze it before doing experiments. What is a reasonable number of times to roll your experiment dice? (given time available in class, etc) If you roll the experiment dice a certain number of times and see a particular outcome, then you would conclude it is fair or not. How confident would you be, in any of those conclusions? Note that while previous Possible Protocols emphasized counting just the number of times a 6 came up, you might consider other outcomes such as the average value of the dice when rolled or the distribution of other outcomes (what number is on opposite face from 6? Do you suppose that number might be disproportionately represented if dice were not fair?).
+----------------------------------------------------------------------------------------------------
+
+# Now devise your own experiment protocol (not ‘possible’ anymore but actual so call it EP1). Analyze it before doing experiments. What is a reasonable number of times to roll your experiment dice?
+
+The limitation of PPs was that we were only considering outcome [6], meanwhile, there are a total of 6 outcomes. As we know the probability of any outcome of [1 2 3 4 5 6] are equal to E(n)=1/6. Thus, in order to find whether dice is fair we will consider the entire observation and whether they are statistically significant from expectation. In this experiment, we will model the Chi square within 95% confidence to find out significant between expectation and actual outcomes. If expectation and outcomes are statistically significant the dice will be considered to be not fair, the opposite holds for fair dice.
+We will use 30 rolls in EP1 and 100 rolls in EP2. The 30 rolls we believe will be a reasonable minimum for this experiment. The 100 rolls we believe will be the most optimal to equalize all outcomes frequency and be able to complete the experiment. In addition, we will be able to compare PP and EP conclusions.
+
+# Experiment Protocol  (EP1):
+
+roll_dice30 summarizes results of dice being rolled 30 times.
+
+Considering that dice has 6 sides and probability of getting [6] is equal to 0.1667. We expecting [6] to appear 5 out of 30 rolls on a fair dice, E(6)=30*1/6=5. In fair dice, every value has an equal probability of 0.1667. Which means that all values expected to reveal 5 times within 30 rolls in a fair dice. Thus, if results in 30 rolls will significantly different from expected values, with 95% confidence, the dice will be considered to be unfair.
+
+In order to test fairness of dice we will use Chi square model.
+
+Null hypothesis: The 30 dice rolls revealed values match with expectation.
+Alternative hypothesis - The 30 dice rolls revealed values do not match with expected.
+
+Chi square test:
+```{r}
+chisq.test(table(roll_dice30),p=rep(1/6,6))
+```
+As the p-value 0.9012 is less than 0.05 significance level, in this case we reject null hypothesis and conclude that dice is not fair.
+
+# Experiment Protocol  (EP2):
+
+roll_dice100 summarizes results of dice being rolled 100 times.
+
+Considering that dice has 6 sides and probability of getting [6] is equal to 0.1667. We expecting [6] to appear in about 17 cases out of 100 rolls on a fair dice, E(6)=100*1/6=17. In fair dice, every value has an equal probability of 0.1667. Which means that all values expected to reveal approximately 17 times within 100 rolls in a fair dice. Thus, if results in 100 rolls will significantly different from expected values, with 95% confidence, the dice will be considered to be unfair.
+
+In order to test fairness of dice we will use Chi square model.
+
+Null hypothesis: The 100 dice rolls revealed values match with expectation.
+Alternative hypothesis - The 100 dice rolls revealed values do not match with expected.
+
+Chi square test:
+```{r}
+chisq.test(table(roll_dice100),p=rep(1/6,6))
+```
+As the p-value 0.0811 is grater than 0.05 significance level, in this case we do not reject bull hypothesis and conclude that dice is fair.
